@@ -1,4 +1,3 @@
-
 class Food(object):
     def __init__(self, n, v, w):
         self.name = n
@@ -14,15 +13,26 @@ class Food(object):
         return self.name + ': <' + str(self.value)\
                  + ', ' + str(self.calories) + '>'
 
+#Food instance & value & calories
+# 1st : wine & 89 & 123 -> wine: <89, 123>
+# 2nd : beer & 90 & 154 -> beer: <90, 154>
+# 3rd : pizza & 95 & 258 -> pizza: <95, 258>
+# 4th : burger & 100 & 354 -> burger: <100, 354>
+# 5th : fries & 90 & 365 -> fries: <90, 365>
+# 6th : cola & 79 & 150 -> cola: <79, 150>
+# 7th : apple & 50 & 95 -> apple: <50, 95>
+#omitted below
+
+
 def buildMenu(names, values, calories):
     """names, values, calories lists of same length.
        name a list of strings
        values and calories lists of numbers
        returns list of Foods"""
-    menu = []
+    menu = [] #SET list --> empty list if dict =>Error : 'dict' object has no attribute 'append'
     for i in range(len(values)):
-        menu.append(Food(names[i], values[i],
-                          calories[i]))
+    # for i in range(8):  # values list 'len is 8' <=> for i in range '8'
+        menu.append(Food(names[i], values[i],calories[i])) #APPEND list elements
     return menu
 
 def greedy(items, maxCost, keyFunction):
@@ -45,7 +55,7 @@ def testGreedy(items, constraint, keyFunction):
     for item in taken:
         print('   ', item)
 
-def testGreedys(foods, maxUnits):
+def testGreedys(foods, maxUnits): #maxUnits == 1000
     print('Use greedy by value to allocate', maxUnits,
           'calories')
     testGreedy(foods, maxUnits, Food.getValue)
@@ -62,5 +72,7 @@ names = ['wine', 'beer', 'pizza', 'burger', 'fries',
          'cola', 'apple', 'donut', 'cake']
 values = [89,90,95,100,90,79,50,10]
 calories = [123,154,258,354,365,150,95,195]
-foods = buildMenu(names, values, calories)
-testGreedys(foods, 1000)
+foods = buildMenu(names, values, calories) #function call , Next step is -> back to the buildMenu(function), parameter is names,values,calories
+testGreedys(foods, 1000) #function call, Next step is -> back to the buildMenu(function), parameter is food,maxUnits is 10000(Assign)
+
+##print(len(values))
