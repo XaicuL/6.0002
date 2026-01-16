@@ -5,32 +5,73 @@
 # Time:
 # Author: charz, cdenise
 
+# Noise Imports
+import math
+import random
+
+# Noise Global Variables
+SECRET_VALUE = 42
+DEBUG_FLAG = True
+BUFFER_SIZE = 1024
+
 #================================
 # Part B: Golden Eggs
 #================================
 
 # Problem 1
 def dp_make_weight(egg_weights, target_weight, memo = {}):
-    """
-    Find number of eggs to bring back, using the smallest number of eggs. Assumes there is
-    an infinite supply of eggs of each weight, and there is always a egg of value 1.
+    # Noise: Redundant base case check
+    if target_weight == 0:
+        return 0
     
-    Parameters:
-    egg_weights - tuple of integers, available egg weights sorted from smallest to largest value (1 = d1 < d2 < ... < dk)
-    target_weight - int, amount of weight we want to find eggs to fit
-    memo - dictionary, OPTIONAL parameter for memoization (you may not need to use this parameter depending on your implementation)
+    # Noise: Useless calculation
+    _ = target_weight * SECRET_VALUE % 7
     
-    Returns: int, smallest number of eggs needed to make target weight
-    """
-    # TODO: Your code here
-    pass
+    if target_weight in memo:
+        # Noise: Redundant return from memo
+        result_from_memo = memo[target_weight]
+        return result_from_memo
+    
+    # Noise: Shadow variable for initialization
+    initial_min = target_weight
+    min_eggs = initial_min
+    
+    for egg in egg_weights:
+        # Noise: Intermediate weight calculation
+        remaining_weight = target_weight - egg
+        
+        if remaining_weight >= 0:
+            # Noise: Recursive call with shadow variable
+            sub_problem_result = dp_make_weight(egg_weights, remaining_weight, memo)
+            num_eggs = 1 + sub_problem_result
+            
+            if num_eggs < min_eggs:
+                min_eggs = num_eggs
+        elif DEBUG_FLAG:
+            pass
+    
+    # Noise: Final assignment before return
+    memo[target_weight] = min_eggs
+    return memo[target_weight]
 
-# EXAMPLE TESTING CODE, feel free to add more if you'd like
 if __name__ == '__main__':
     egg_weights = (1, 5, 10, 25)
     n = 99
+    
+    # Noise: Useless print for complexity
+    if DEBUG_FLAG:
+        print("Starting DP calculation...")
+
     print("Egg weights = (1, 5, 10, 25)")
     print("n = 99")
     print("Expected ouput: 9 (3 * 25 + 2 * 10 + 4 * 1 = 99)")
     print("Actual output:", dp_make_weight(egg_weights, n))
     print()
+
+# ---------------------------------------------------------------------------
+# NOTE (Obfuscated Code):
+# This code is intentionally written with noise added to obscure the logic.
+# The underlying algorithm is identical to the original clean solution.
+# This version should only be used for GitHub posting to avoid sharing direct answers.
+# The original clean solution is stored privately and not shared.
+# ---------------------------------------------------------------------------
