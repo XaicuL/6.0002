@@ -1,0 +1,216 @@
+# # def fib(n):
+# #     if n == 0 or n == 1:
+# #         return 1
+# #     else:
+# #         return fib(n-1) + fib(n-2)
+# #
+# # # print(fib(120)) # -> Existence of output waiting time cuz, Time Complexity : O(fib(n))
+# #
+# # def fib_memo(n, memo = None):
+# #     if memo == None:
+# #         memo = {}
+# #     if n == 0 or n == 1:
+# #         return 1
+# #
+# #     try:
+# #         return memo[n]
+# #     except KeyError:
+# #         result = fib_memo(n-1 , memo) + fib(n-2, memo)
+# #         memo[n] = result
+# #         return result
+# #
+# # def fib_tab(n):
+# #     tab = [1] * (n+1)
+# #
+# #     for i in range(2, n+1):
+# #         tab[i] = tab[i-1] + tab[i-2]
+# #
+# #     return tab[n]
+# #
+#
+# def max_val(to_consider, avail):
+#     """Assumes to_consider a list of items, avail a weight
+#        Returns a tuple of the total value of a solution to the
+#          0/1 knapsack problem and the items of that solution"""
+#     if to_consider == [] or avail == 0:
+#         result = (0, ())
+#     elif to_consider[0].get_weight() > avail:
+#         #Explore right branch only
+#         result = max_val(to_consider[1:], avail)
+#     else:
+#         next_item = to_consider[0]
+#         #Explore left branch
+#         with_val, with_to_take = max_val(to_consider[1:],
+#                                      avail - next_item.get_weight())
+#         with_val += next_item.get_value()
+#         #Explore right branch
+#         without_val, without_to_take = max_val(to_consider[1:], avail)
+#         #Choose better branch
+#         if with_val > without_val:
+#             result = (with_val, with_to_take + (next_item,))
+#         else:
+#             result = (without_val, without_to_take)
+#     return result
+#
+# def small_test():
+#     names = ['a', 'b', 'c', 'd']
+#     vals = [6, 7, 8, 9]
+#     weights = [3, 3, 2, 5]
+#     Items = []
+#     for i in range(len(vals)):
+#         Items.append(Item(names[i], vals[i], weights[i]))
+#     val, taken = max_val(Items, 5)
+#     for item in taken:
+#         print(item)
+#     print('Total value of items taken =', val)
+#
+# def build_many_items(num_items, max_val, max_weight):
+#     items = []
+#     for i in range(num_items):
+#         items.append(Items(str(i),
+#                           random.randint(1, max_val),
+#                           random.randint(1, max_weight)))
+#     return items
+#
+# def big_test(num_items, avail_weight):
+#     items = build_many_items(num_items, 10, 10)
+#     val, taken = max_val(items, avail_weight)
+#     print('Items Taken')
+#     for item in taken:
+#         print(item)
+#     print('Total value of items taken =', val)
+#
+# # small_test()
+# big_test(10, 40)
+# big_test(40, 100)
+#
+# def fast_max_val(to_consider, avail, memo = {}):
+#     """Assumes to_consider a list of items, avail a weight
+#          memo supplied by recursive calls
+#        Returns a tuple of the total value of a solution to the
+#          0/1 knapsack problem and the items of that solution"""
+#     if (len(to_consider), avail) in memo:
+#         result = memo[(len(to_consider), avail)]
+#     elif to_consider == [] or avail == 0:
+#         result = (0, ())
+#     elif to_consider[0].get_weight() > avail:
+#         #Explore right branch only
+#         result = fast_max_val(to_consider[1:], avail, memo)
+#     else:
+#         next_item = to_consider[0]
+#         #Explore left branch
+#         with_val, with_to_take =\
+#                  fast_max_val(to_consider[1:],
+#                             avail - next_item.get_weight(), memo)
+#         with_val += next_item.get_value()
+#         #Explore right branch
+#         without_val, without_to_take = fast_max_val(to_consider[1:],
+#                                                 avail, memo)
+#         #Choose better branch
+#         if with_val > without_val:
+#             result = (with_val, with_to_take + (next_item,))
+#         else:
+#             result = (without_val, without_to_take)
+#     memo[(len(to_consider), avail)] = result
+#     return result
+
+class Location(object):
+    def __init__(self, x, y):
+        """x and y are numbers"""
+        self._x, self._y = x, y
+
+    def move(self, delta_x, delta_y):
+        """delta_x and delta_y are numbers"""
+        return Location(self._x + delta_x, self._y + delta_y)
+
+    def get_x(self):
+        return self._x
+
+    def get_y(self):
+        return self._y
+
+    def dist_from(self, other):
+        ox, oy = other._x, other._y
+        x_dist, y_dist = self._x - ox, self._y - oy
+        return (x_dist ** 2 + y_dist ** 2) ** 0.5
+
+    def __str__(self):
+        return f'<{self._x}, {self._y}>'
+
+
+class Field(object):
+    def __init__(self):
+        self._drunks = {}
+
+    def add_drunk(self, drunk, loc):
+        if drunk in self._drunks:
+            raise ValueError('Duplicate drunk')
+        else:
+            self._drunks[drunk] = loc
+
+    def move_drunk(self, drunk):
+        if drunk not in self._drunks:
+            raise ValueError('Drunk not in field')
+        x_dist, y_dist = drunk.take_step()
+        current_location = self._drunks[drunk]
+        # use move method of Location to get new location
+        self._drunks[drunk] = current_location.move(x_dist, y_dist)
+
+    def get_loc(self, drunk):
+        if drunk not in self._drunks:
+            raise ValueError('Drunk not in field')
+        return self._drunks[drunk]
+
+class Drunk(object):
+    def __init__(self, name = None):
+        """Assumes name is a str"""
+        self._name = name
+
+    def __str__(self):
+        if self != None:
+            return self._name
+        return 'Anonymous'
+
+class Usual_drunk(Drunk):
+    def take_step(self):
+        step_choices = [(0,1), (0,-1), (1, 0), (-1, 0)]
+        return random.choice(step_choices)
+        return random.choice(step_choices)
+
+def walk(f, d, num_steps):
+    """Assumes: f a Field, d a Drunk in f, and num_steps an int >= 0.
+       Moves d num_steps times; returns the distance between the
+       final location and the location at the start of the  walk."""
+    start = f.get_loc(d)
+    for s in range(num_steps):
+        f.move_drunk(d)
+    return start.dist_from(f.get_loc(d))
+
+def sim_walks(num_steps, num_trials, d_class):
+    """Assumes num_steps an int >= 0, num_trials an int > 0,
+         d_class a subclass of Drunk
+       Simulates num_trials walks of num_steps steps each.
+       Returns a list of the final distances for each trial"""
+    Homer = d_class()
+    origin = Location(0, 0)
+    distances = []
+    for t in range(num_trials):
+        f = Field()
+        f.add_drunk(Homer, origin)
+        distances.append(round(walk(f, Homer, num_trials), 1))
+    return distances
+
+def drunk_test(walk_lengths, num_trials, d_class):
+    """Assumes walk_lengths a sequence of ints >= 0
+         num_trials an int > 0, d_class a subclass of Drunk
+       For each number of steps in walk_lengths, runs sim_walks with
+         num_trials walks and prints results"""
+    for num_steps in walk_lengths:
+        distances = sim_walks(num_steps, num_trials, d_class)
+        print(d_class.__name__, 'walk of', num_steps, 'steps: Mean =',
+              f'{sum(distances)/len(distances):.3f}, Max =',
+              f'{max(distances)}, Min = {min(distances)}')
+
+# random.seed(0)
+drunk_test((10, 100, 1000, 10000), 100, Usual_drunk)
+drunk_test((0,1), 100, Usual_drunk)
