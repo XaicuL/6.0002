@@ -19,7 +19,7 @@ pylab.rcParams['ytick.major.size'] = 7
 pylab.rcParams['legend.numpoints'] = 1
 
 
-class Location(object):
+class Location(object): #Immutable type
     def __init__(self, x, y):
         """x and y are numbers"""
         self.x = x
@@ -81,7 +81,7 @@ class Drunk(object):
 
 class UsualDrunk(Drunk):
     def takeStep(self):
-        stepChoices = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        stepChoices = [(0, 1), (0, -1), (1, 0), (-1, 0)] # -> up , down , right , left
         return random.choice(stepChoices)
 
 
@@ -291,4 +291,58 @@ def traceWalk(fieldKinds, numSteps):
 # random.seed(0)
 # traceWalk((Field, OddField), 500)
 
+# drunkTest((10,100,1000,10000),100,UsualDrunk)
+#>>>
+# UsualDrunk random walk of 10 steps
+#  Mean = 8.634
+#  Max = 21.6 Min = 1.4
+# UsualDrunk random walk of 100 steps
+#  Mean = 8.57
+#  Max = 22.0 Min = 0.0
+# UsualDrunk random walk of 1000 steps
+#  Mean = 9.206
+#  Max = 21.6 Min = 1.4
+# UsualDrunk random walk of 10000 steps
+#  Mean = 8.727
+#  Max = 23.5 Min = 1.4
+# UsualDrunk random walk of 10 steps
+#  Mean = 9.295
+#  Max = 24.2 Min = 1.4
+# UsualDrunk random walk of 100 steps
+#  Mean = 9.206
+#  Max = 21.0 Min = 1.4
+# UsualDrunk random walk of 1000 steps
+#  Mean = 8.946
+#  Max = 22.0 Min = 0.0
+# UsualDrunk random walk of 10000 steps
+#  Mean = 9.222
+#  Max = 24.1 Min = 1.4
+# None
+# <<<
 
+# drunkTest((0,1,2),100,UsualDrunk)
+#>>>
+# UsualDrunk random walk of 10 steps
+#  Mean = 8.634
+#  Max = 21.6 Min = 1.4
+# UsualDrunk random walk of 100 steps
+#  Mean = 8.57
+#  Max = 22.0 Min = 0.0
+# UsualDrunk random walk of 1000 steps
+#  Mean = 9.206
+#  Max = 21.6 Min = 1.4
+# UsualDrunk random walk of 10000 steps
+#  Mean = 8.727
+#  Max = 23.5 Min = 1.4
+# UsualDrunk random walk of 0 steps
+#  Mean = 9.295
+#  Max = 24.2 Min = 1.4
+# UsualDrunk random walk of 1 steps
+#  Mean = 9.206
+#  Max = 21.0 Min = 1.4
+# UsualDrunk random walk of 2 steps
+#  Mean = 8.946
+#  Max = 22.0 Min = 0.0
+#
+# Process finished with exit code 0
+# <<<
