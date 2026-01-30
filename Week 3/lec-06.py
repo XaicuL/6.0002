@@ -547,11 +547,160 @@ def check_empirical(mu_max, sigma_max, num_trials):
                   round(area, 4))
 
 random.seed(0)
-check_empirical(10, 10, 3)
+# check_empirical(10, 10, 3)
 
 # # Code on bottom of p[age 374]
 # for x in range(-2, 3):
 #     print(gaussian(x, 0, 1))
+
+
+
+def successful_starts(success_prob, num_trials):
+    """Assumes success_prob is a float representing probability of a
+         single attempt being successful. num_trials a positive int
+       Returns a list of the number of attempts needed before a
+         success for each trial."""
+    tries_before_success = []
+    for t in range(num_trials):
+        consec_failures = 0
+        while random.random() > success_prob:
+            consec_failures += 1
+        tries_before_success.append(consec_failures)
+    return tries_before_success
+#
+# prob_of_success = 0.5
+# num_trials = 5000
+# distribution = successful_starts(prob_of_success, num_trials)
+# plt.hist(distribution, bins = 14)
+# plt.xlabel('Tries Before Success')
+# plt.ylabel('Number of Occurrences Out of ' + str(num_trials))
+# plt.title('Probability of Starting Each Try = '
+#             + str(prob_of_success))
+
+# plt.show()
+
+
+def collision_prob(n , k):
+    prob = 1.0
+    for i in range(1,k):
+        prob = prob * ((n - i) / n)
+
+    return 1- prob
+
+# print(collision_prob(1000, 50))
+
+
+def sim_insertions(num_indices , num_insertions):
+    choices = range(num_insertions)
+
+    used = []
+
+    for i in range(num_insertions):
+        hash_val = random.choice(choices)
+
+        if hash_val in used:
+            return 1
+        else:
+            return 0
+
+def fine_prob(num_indices, num_insertions, num_trials):
+    collisions = 0
+
+    for t in range(num_trials):
+        collisions += sim_insertions(num_indices, num_insertions)
+
+    return collisions / num_trials
+#
+# print(f"collision_prob output : {collision_prob(1000,50)}")
+# print(f"find_prob output : {fine_prob(1000, 50, 10000)}")
+# print(f"collision_prob output 2nd : {collision_prob(1000 , 200)}")
+# print(f"find_prob output 2nd : {fine_prob(1000 , 200, 10000)}")
+
+def roll_die():
+    return random.choice([1,2,3,4,5,6])
+
+def check_pascal(num_trials):
+    num_wins = 0
+
+    for i in range(num_trials):
+        for j in range(24):
+            d1 = roll_die()
+            d2 = roll_die()
+
+            if d1 == 6 and d2 == 6:
+                num_wins += 1
+                break
+
+    print(f'winning = {num_wins/num_trials}')
+
+
+
+class Craps_game(object):
+    def __init__(self):
+        self.pass_wins, self.pass_losses = 0.0
+        self.dp_wins, self.dp_losses , self.dp_pushes = 0,0,0
+
+    def play_hand(self):
+        throw = roll_die() + roll_die()
+
+        if throw == 7 or throw == 11:
+            self.pass_wins += 1
+            self.pass_losses += 1
+        elif throw == 2 or throw == 3 or throw == 12:
+            self.pass_losses += 1
+            if throw == 12:
+                self.dp_pushes += 1
+            else:
+                self.dp_wins += 1
+
+        else:
+            point = throw
+            while True:
+                throw = roll_die() + roll_die()
+
+                if throw == point:
+                    self.pass_wins += 1
+                    self.dp_losses += 1
+                    break
+                elif throw == 7:
+                    self.pass_losses += 1
+                    self.dp_wins += 1
+                break
+
+    def pass_result(self):
+        return (self.pass_wins, self.pass_losses)
+
+    def dp_result(self):
+        return (self.dp_wins, self.dp_losses, self.dp_pushes)
+
+    def craps_sim(hands_per_game, num_games):
+        """Assumes hands_per_game and num_games are ints > 0
+           Play num_games games of hands_per_game hands; print results"""
+        games = []
+
+        # Play num_games games
+        for t in range(num_games):
+            c = Craps_game()
+            for i in range(hands_per_game):
+                c.play_hand()
+            games.append(c)
+
+        # Produce statistics for each game
+        p_ROI_per_game, dp_ROI_per_game = [], []
+        for g in games:
+            wins, losses = g.pass_results()
+            p_ROI_per_game.append((wins - losses) / float(hands_per_game))
+            wins, losses, pushes = g.dp_results()
+            dp_ROI_per_game.append((wins - losses) / float(hands_per_game))
+
+        # Produce and print summary statistics
+        mean_ROI = str(round((100 * sum(p_ROI_per_game) / num_games), 4)) + '%'
+        sigma = str(round(100 * np.std(p_ROI_per_game), 4)) + '%'
+        print('Pass:', 'Mean ROI =', mean_ROI, 'Std. Dev. =', sigma)
+        mean_ROI = str(round((100 * sum(dp_ROI_per_game) / num_games), 4)) + '%'
+        sigma = str(round(100 * np.std(dp_ROI_per_game), 4)) + '%'
+        print('Don\'t pass:', 'Mean ROI =', mean_ROI, 'Std Dev =', sigma)
+
 
 
 
