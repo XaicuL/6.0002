@@ -88,7 +88,9 @@ class SimpleBacteria(object):
                 probability
             death_prob (float in [0, 1]): Maximum death probability
         """
-        pass  # TODO
+        self.birth_prob = birth_prob
+        self.death_prob = death_prob
+
 
     def is_killed(self):
         """
@@ -99,7 +101,13 @@ class SimpleBacteria(object):
         Returns:
             bool: True with probability self.death_prob, False otherwise.
         """
-        pass  # TODO
+        rn = random.random()
+
+        if rn < self.death_prob:
+            return True
+        else:
+            return False
+
 
     def reproduce(self, pop_density):
         """
@@ -127,7 +135,13 @@ class SimpleBacteria(object):
         Raises:
             NoChildException if this bacteria cell does not reproduce.
         """
-        pass  # TODO
+        prob = self.birth_prob * (1 - pop_density)
+
+        if random.random() <= prob:
+            return SimpleBacteria(self.birth_prob,self.death_prob)
+        else:
+            raise NoChildException
+
 
 
 class Patient(object):
@@ -142,7 +156,9 @@ class Patient(object):
             max_pop (int): Maximum possible bacteria population size for
                 this patient
         """
-        pass  # TODO
+        self.bacteria = list(bacteria)
+        self.max_pop = max_pop
+
 
     def get_total_pop(self):
         """
@@ -151,7 +167,8 @@ class Patient(object):
         Returns:
             int: The total bacteria population
         """
-        pass  # TODO
+        return len(self.bacteria)
+
 
     def update(self):
         """
@@ -177,8 +194,28 @@ class Patient(object):
         Returns:
             int: The total bacteria population at the end of the update
         """
-        pass  # TODO
 
+        survival = []
+
+        for bact in self.bacteria:
+            if not bact.is_killed():
+                survival.append(bact)
+
+        pop_density = len(survival) / self.max_pop
+
+        new = []
+
+        for bact in survival:
+            try:
+                offspring = bact.reproduce(pop_density)
+                new.append(offspring)
+
+            except NoChildException:
+                pass
+
+        self.bacteria = survival + new
+
+        return len(self.bacteria)
 
 ##########################
 # PROBLEM 2
