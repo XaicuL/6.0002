@@ -85,6 +85,7 @@ class Climate(object):
 
         f.close()
 
+
     def get_yearly_temp(self, city, year):
         """
         Get the daily temperatures for the given year and city.

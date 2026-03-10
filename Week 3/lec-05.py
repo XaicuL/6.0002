@@ -19,7 +19,7 @@ pylab.rcParams['ytick.major.size'] = 7
 pylab.rcParams['legend.numpoints'] = 1
 
 
-class Location(object): #Immutable type
+class Location(object):  # Immutable type
     def __init__(self, x, y):
         """x and y are numbers"""
         self.x = x
@@ -81,7 +81,7 @@ class Drunk(object):
 
 class UsualDrunk(Drunk):
     def takeStep(self):
-        stepChoices = [(0, 1), (0, -1), (1, 0), (-1, 0)] # -> up , down , right , left
+        stepChoices = [(0, 1), (0, -1), (1, 0), (-1, 0)]  # -> up , down , right , left
         return random.choice(stepChoices)
 
 
@@ -292,7 +292,7 @@ def traceWalk(fieldKinds, numSteps):
 # traceWalk((Field, OddField), 500)
 
 # drunkTest((10,100,1000,10000),100,UsualDrunk)
-#>>>
+# >>>
 # UsualDrunk random walk of 10 steps
 #  Mean = 8.634
 #  Max = 21.6 Min = 1.4
@@ -321,7 +321,7 @@ def traceWalk(fieldKinds, numSteps):
 # <<<
 
 # drunkTest((0,1,2),100,UsualDrunk)
-#>>>
+# >>>
 # UsualDrunk random walk of 10 steps
 #  Mean = 8.634
 #  Max = 21.6 Min = 1.4
@@ -346,3 +346,4 @@ def traceWalk(fieldKinds, numSteps):
 #
 # Process finished with exit code 0
 # <<<
+
