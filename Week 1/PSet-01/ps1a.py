@@ -29,6 +29,7 @@ def load_cows(filename):
     # Noise: Redundant variable
     file_path_check = filename
     
+    
     with open(file_path_check, 'r') as f:
         for line in f:
             # Noise: Useless calculation
